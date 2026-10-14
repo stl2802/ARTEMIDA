@@ -1,0 +1,53 @@
+{
+  "domain": "Machine Learning and Natural Language Processing",
+  "queries": {
+    "exact_terms": [
+      "Neural Networks",
+      "Backpropagation",
+      "Transformer architecture",
+      "Gradient descent",
+      "Natural Language Processing",
+      "Overfitting",
+      "Convolutional Neural Network",
+      "Reinforcement Learning",
+      "Stochastic optimization",
+      "Attention mechanism"
+    ],
+    "detailed_queries": [
+      "How does the transformer architecture improve natural language processing tasks significantly",
+      "What are the main causes of overfitting in deep neural networks training",
+      "Compare the performance of stochastic gradient descent and Adam optimizer algorithms",
+      "Applications of reinforcement learning in autonomous driving systems and modern robotics",
+      "How to prevent vanishing gradient problem in recurrent neural networks effectively",
+      "The impact of attention mechanisms on machine translation accuracy and speed",
+      "Techniques for reducing computational complexity in large language models deployment",
+      "Evaluating the effectiveness of convolutional neural networks in image classification tasks",
+      "Methods for handling imbalanced datasets in supervised machine learning algorithms properly",
+      "The role of dropout regularization in improving generalization of deep learning models"
+    ],
+    "short_queries": [
+      "Deep learning optimization techniques",
+      "Transformer model architecture",
+      "NLP text classification",
+      "Prevent neural network overfitting",
+      "Reinforcement learning basics",
+      "Gradient descent algorithm",
+      "Attention mechanism explained",
+      "CNN image recognition",
+      "Machine learning datasets",
+      "Backpropagation in neural networks"
+    ],
+    "error_queries": [
+      "how to fix overfiting in nueral networks",
+      "tranformer attention mecanism explained",
+      "gradiant descent vs adam optimiser",
+      "convolutional neural netwrok for images",
+      "natural langage processing basics",
+      "machine learning algorithms for predicting the past",
+      "how to make neural networks run without electricity",
+      "best database for storing human thoughts directly",
+      "using sql queries to train a convolutional neural network",
+      "why python is slower than manual calculation in ai"
+    ]
+  }
+}
