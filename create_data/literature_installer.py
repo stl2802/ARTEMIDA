@@ -19,7 +19,7 @@ for item in dataset:
     
     if len(doc_text) < 200:
         continue
-        
+    #TODO: сделать кросплатформенность путей
     filename:str = f"{fold_name}/doc_{count:04d}.txt"
     with open(filename, "w", encoding="utf-8") as f:
         f.write(doc_text)

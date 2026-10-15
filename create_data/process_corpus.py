@@ -2,28 +2,32 @@ import json
 import re
 from pathlib import Path
 
-FOLDER_NAME = "literature"
-OUTPUT_FILE = "corpus.json"
+FOLDER_NAME:str = "literature"
+#TODO: через os сделать кросплатформенное преобразование пути
+OUTPUT_FILE:str = "json/corpus.json"
+
 
 def clean_text(text: str) -> str:
-    text = re.sub(r'\s+', ' ', text)
+    text:str = re.sub(r'\s+', ' ', text)
     return text.strip()
 
 def parse_document(file_path: Path, doc_id: str) -> dict:
     with open(file_path, 'r', encoding='utf-8') as f:
-        raw_content = f.read()
+        if not file_path.exists():
+            raise FileNotFoundError(f"Файл {file_path} не найден")
+        raw_content:str = f.read()
     
-    parts = raw_content.split("ABSTRACT:", 1)
+    parts:list[str] = raw_content.split("ABSTRACT:", 1)
     
     if len(parts) < 2:
         raise ValueError(f"Битый файл: не найден маркер 'ABSTRACT:' в {file_path}")
     
-    title_raw = parts[0].replace("TITLE:", "").strip()
-    abstract_raw = parts[1].strip()
+    title_raw:str = parts[0].replace("TITLE:", "").strip()
+    abstract_raw:str = parts[1].strip()
     
-    title = clean_text(title_raw)
-    summary = clean_text(abstract_raw)
-    full_text = clean_text(raw_content)
+    title:str = clean_text(title_raw)
+    summary:str = clean_text(abstract_raw)
+    full_text:str = clean_text(raw_content)
     
     return {
         "id": doc_id,
@@ -43,7 +47,7 @@ def main():
     txt_files = sorted(folder.glob("doc_*.txt"))
     
     for file_path in txt_files:
-        doc_id = file_path.stem
+        doc_id:str = file_path.stem
         try:
             doc_data = parse_document(file_path, doc_id)
             corpus.append(doc_data)
