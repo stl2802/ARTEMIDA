@@ -2,3 +2,4 @@ datasets
 nltk
 matplotlib
 Sentence-Transformers
+hnswlib
