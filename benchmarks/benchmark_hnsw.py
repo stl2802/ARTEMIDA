@@ -18,7 +18,7 @@ VOCABULARY_FILE = "json/vocabulary.json"
 INVERTED_INDEX_FILE = "json/inverted_index.json"
 SVD_VT_FILE = "npy/svd_vt.npy"
 SVD_VECTORS_FILE = "npy/doc_vectors_svd.npy"
-HNSW_INDEX_FILE = "hnsw_index.bin"
+HNSW_INDEX_FILE = "bin/hnsw_index.bin"
 DOC_IDS_FILE = "json/doc_ids.json"
 QUERIES_FILE = "json/queries.json"
 

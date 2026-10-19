@@ -1,6 +1,10 @@
 import sys
 import argparse
 
+def cmd_create_data(args):
+    """создание необходимых документов"""
+    from create_data.literature_installer import main
+    main()
 
 def cmd_corpus(args):
     """Обработка корпуса в json/corpus.json"""
@@ -151,39 +155,42 @@ def cmd_init(args):
     print("=" * 70)
 
     import os
-
+    flag = False
     if not os.path.exists("literature"):
-        print("\nОШИБКА: Директория 'literature/' не найдена!")
-        print("Убедитесь, что исходные файлы документов находятся в literature/")
-        return
+        print("\n" + "-" * 70)
+        print("[1/10] создание тестовых данных")
+        print("-" * 70)
+        from create_data.literature_installer import main
+        main()
+        flag = True
 
     try:
         print("\n" + "-" * 70)
-        print("[1/9] Обработка корпуса из literature/")
+        print("[2/10] Обработка корпуса из literature/")
         print("-" * 70)
         from create_data.process_corpus import main as process_corpus_main
         process_corpus_main()
 
         print("\n" + "-" * 70)
-        print("[2/9] Предобработка корпуса")
+        print("[3/10] Предобработка корпуса")
         print("-" * 70)
         from preprocess_corpus import main as preprocess_main
         preprocess_main()
 
         print("\n" + "-" * 70)
-        print("[3/9] Построение словаря")
+        print("[4/10] Построение словаря")
         print("-" * 70)
         from vectoryzing.vectorize_corpus import build_vocabulary
         build_vocabulary()
 
         print("\n" + "-" * 70)
-        print("[4/9] Лексический индекс (BM25)")
+        print("[5/10] Лексический индекс (BM25)")
         print("-" * 70)
         from lecsika_search import build_mode
         build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
 
         print("\n" + "-" * 70)
-        print("[5/9] TF-IDF векторы + SVD")
+        print("[6/10] TF-IDF векторы + SVD")
         print("-" * 70)
         from tfidf_search import TfidfSearcher
         tfidf = TfidfSearcher()
@@ -191,33 +198,33 @@ def cmd_init(args):
         tfidf.apply_svd(k=args.k)
 
         print("\n" + "=" * 70)
-        print("[6/9] HNSW индекс")
+        print("[7/10] HNSW индекс")
         print("=" * 70)
         from hnsw_search import build_index
         build_index()
 
         print("\n" + "-" * 70)
-        print("[7/9] Нейронные векторы (multilingual)")
+        print("[8/10] Нейронные векторы (multilingual)")
         print("-" * 70)
         from neural_search import NeuralSearcher
         neural = NeuralSearcher()
         neural.build()
 
         print("\n" + "=" * 70)
-        print("[8/9] Подготовка LTR датасета")
+        print("[9/10] Подготовка LTR датасета")
         print("=" * 70)
         from prepare_ltr_dataset import prepare_dataset
         prepare_dataset()
         
     
         print("\n" + "-" * 70)
-        print("[8.5/9] Разделение LTR датасета на train/test")
+        print("[9.5/10] Разделение LTR датасета на train/test")
         print("-" * 70)
         from split_dataset import split_dataset
         split_dataset()
 
         print("\n" + "-" * 70)
-        print("[9/9] Обучение LTR модели (LightGBM)")
+        print("[10/10] Обучение LTR модели (LightGBM)")
         print("-" * 70)
         from train_ltr import train_model
         train_model()
@@ -226,6 +233,8 @@ def cmd_init(args):
         print("ПОЛНАЯ ИНИЦИАЛИЗАЦИЯ ЗАВЕРШЕНА УСПЕШНО!")
         print("-" * 70)
         print("\nВсе файлы сгенерированы:")
+        if flag:
+            print("  - literature/")
         print("  - json/corpus.json")
         print("  - json/preprocessed_corpus.json")
         print("  - json/inverted_index.json")
@@ -239,7 +248,7 @@ def cmd_init(args):
         print("  - npy/doc_vectors_svd.npy")
         print("  - npy/svd_vt.npy")
         print("  - npy/neural_doc_vectors.npy")
-        print("  - hnsw_index.bin")
+        print("  - bin/hnsw_index.bin")
         print("  - model/ltr_model.pkl")
         print("  - model/feature_order.json")
         print("\nТеперь можно использовать все команды поиска:")
@@ -250,9 +259,9 @@ def cmd_init(args):
         print("  python main.py hnsw search     - HNSW поиск")
 
     except Exception as e:
-        print("\n" + "=" * 70)
+        print("\n" + "-" * 70)
         print("ОШИБКА ПРИ ИНИЦИАЛИЗАЦИИ")
-        print("=" * 70)
+        print("-" * 70)
         print(f"\n{e}")
         import traceback
         traceback.print_exc()
@@ -260,19 +269,19 @@ def cmd_init(args):
 
 def cmd_benchmark_alpha(args):
     """Бенчмарк влияния параметра α"""
-    from benchmark_alpha import run_benchmark
+    from benchmarks.benchmark_alpha import run_benchmark
     run_benchmark()
 
 
 def cmd_benchmark_hnsw(args):
     """Бенчмарк HNSW vs точный поиск"""
-    from benchmark_hnsw import main
+    from benchmarks.benchmark_hnsw import main
     main()
 
 
 def cmd_benchmark_ltr(args):
     """Бенчмарк LTR vs гибридный поиск"""
-    from benchmark_ltr import main
+    from benchmarks.benchmark_ltr import main
     main()
 
 
@@ -393,6 +402,9 @@ def main():
     )
     
     subparsers = parser.add_subparsers(dest="command", help="Команды")
+    
+    p_create_data = subparsers.add_parser("create-data", help="Создание литературы для поиска в ней")
+    p_create_data.set_defaults(func=cmd_create_data)
     
     p_corpus = subparsers.add_parser("corpus", help="Обработка корпуса из literature/")
     p_corpus.set_defaults(func=cmd_corpus)

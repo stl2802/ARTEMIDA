@@ -154,7 +154,7 @@ def build_mode():
         print("  - json/inverted_index.json")
         print("  - json/preprocessed_corpus.json")
         print("  - npy/doc_vectors_svd.npy")
-        print("  - hnsw_index.bin")
+        print("  - bin/hnsw_index.bin")
         print("  - json/doc_ids.json")
 
 

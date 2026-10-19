@@ -19,7 +19,7 @@ except ImportError:
 
 try:
     from hnsw_search import HnswSearcher
-    HNSW_AVAILABLE = os.path.exists("hnsw_index.bin")
+    HNSW_AVAILABLE = os.path.exists("bin/hnsw_index.bin")
 except ImportError:
     HNSW_AVAILABLE = False
     print("Внимание: hnsw_search недоступен")
