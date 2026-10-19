@@ -36,7 +36,7 @@ def cmd_lexical(args):
 
 def cmd_tfidf(args):
     """TF-IDF векторы"""
-    from tfidf_search import TfidfSearcher
+    from searches.tfidf_search import TfidfSearcher
     searcher = TfidfSearcher()
     if args.mode == "build":
         searcher.build()
@@ -117,7 +117,7 @@ def cmd_index_all(args):
     build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
 
     print("\n[3/5] TF-IDF + SVD...")
-    from tfidf_search import TfidfSearcher
+    from searches.tfidf_search import TfidfSearcher
     tfidf = TfidfSearcher()
     tfidf.build()
     tfidf.apply_svd(k=args.k)
@@ -192,7 +192,7 @@ def cmd_init(args):
         print("\n" + "-" * 70)
         print("[6/10] TF-IDF векторы + SVD")
         print("-" * 70)
-        from tfidf_search import TfidfSearcher
+        from searches.tfidf_search import TfidfSearcher
         tfidf = TfidfSearcher()
         tfidf.build()
         tfidf.apply_svd(k=args.k)
