@@ -3,3 +3,4 @@ nltk
 matplotlib
 Sentence-Transformers
 hnswlib
+lightgbm

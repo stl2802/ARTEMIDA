@@ -18,3 +18,13 @@ def _normalize_scores(self, scores: list, key: str) -> list:
 10) все по новой расмотреть подробно
 11) лемма заменить на более нормальный алгортм сжатия слов
 11) вынести в отдельный модель utils все функции что можно переиспользовать 
+12) !!! попробовать сделать нейросетью обучение!!!
+13) пройтись по svd и файлам
+{
+    hnsw_search.py
+    ltr_search.py
+    train_ltr.py
+    vector_index.py
+    benchmark_ltr.py
+    mian.py
+}
