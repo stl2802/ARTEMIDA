@@ -4,7 +4,7 @@ import numpy as np
 from collections import Counter
 from sentence_transformers import SentenceTransformer
 
-from lecsika_search import load_index, calculate_bm25, tokenize
+from searches.lecsika_search import load_index, calculate_bm25, tokenize
 
 INVERTED_INDEX_FILE = "json/inverted_index.json"
 VOCABULARY_FILE = "json/vocabulary.json"

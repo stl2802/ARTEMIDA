@@ -1,8 +1,8 @@
 import json
 import time
 import numpy as np
-from hybrid_search import HybridSearcher
-from ltr_search import LTRSearcher
+from searches.hybrid_search import HybridSearcher
+from searches.ltr_search import LTRSearcher
 
 TEST_FILE = "json/ltr_test.json"
 

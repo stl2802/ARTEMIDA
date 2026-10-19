@@ -6,8 +6,8 @@ import numpy as np
 import lightgbm as lgb
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-from feature_extractor import FeatureExtractor
-from hybrid_search import HybridSearcher
+from neural_train_process_data.feature_extractor import FeatureExtractor
+from searches.hybrid_search import HybridSearcher
 
 MODEL_FILE = "model/ltr_model.pkl"
 FEATURE_ORDER_FILE = "model/feature_order.json"

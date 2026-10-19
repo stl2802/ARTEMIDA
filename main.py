@@ -27,10 +27,10 @@ def cmd_vocabulary(args):
 def cmd_lexical(args):
     """Лексический индекс (BM25)"""
     if args.mode == "build":
-        from lecsika_search import build_mode
+        from searches.lecsika_search import build_mode
         build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
     elif args.mode == "search":
-        from lecsika_search import search_mode
+        from searches.lecsika_search import search_mode
         search_mode("json/inverted_index.json", "json/queries.json")
 
 
@@ -50,7 +50,7 @@ def cmd_tfidf(args):
 
 def cmd_neural(args):
     """Нейронные векторы"""
-    from neural_search import NeuralSearcher
+    from searches.neural_search import NeuralSearcher
     searcher = NeuralSearcher()
     if args.mode == "build":
         searcher.build()
@@ -62,10 +62,10 @@ def cmd_neural(args):
 def cmd_hnsw(args):
     """HNSW индекс"""
     if args.mode == "build":
-        from hnsw_search import build_index
+        from searches.hnsw_search import build_index
         build_index()
     elif args.mode == "search":
-        from hnsw_search import HnswSearcher
+        from searches.hnsw_search import HnswSearcher
         searcher = HnswSearcher()
         _run_search(searcher.approximate_search, searcher.forward_index, 
                     get_all=lambda r: (r[0], None, None, r[1]), score_name="similarity")
@@ -73,7 +73,7 @@ def cmd_hnsw(args):
 
 def cmd_hybrid(args):
     """Гибридный поиск"""
-    from hybrid_search import HybridSearcher
+    from searches.hybrid_search import HybridSearcher
     if args.mode == "build":
         HybridSearcher()
         print("Все индексы загружены успешно!")
@@ -84,7 +84,7 @@ def cmd_hybrid(args):
 
 def cmd_smart_hybrid(args):
     """Умный гибридный поиск с автоматическим выбором метода"""
-    from smart_hybrid_search import search_mode
+    from searches.smart_hybrid_search import search_mode
     search_mode()
 
 
@@ -94,10 +94,10 @@ def cmd_ltr(args):
         from train_ltr import train_model
         train_model()
     elif args.mode == "prepare":
-        from prepare_ltr_dataset import prepare_dataset
+        from neural_train_process_data.prepare_ltr_dataset import prepare_dataset
         prepare_dataset()
     elif args.mode == "search":
-        from ltr_search import LTRSearcher
+        from searches.ltr_search import LTRSearcher
         searcher = LTRSearcher()
         _run_ltr_search(searcher)
 
@@ -113,7 +113,7 @@ def cmd_index_all(args):
     build_vocabulary()
 
     print("\n[2/5] Лексический индекс...")
-    from lecsika_search import build_mode
+    from searches.lecsika_search import build_mode
     build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
 
     print("\n[3/5] TF-IDF + SVD...")
@@ -123,11 +123,11 @@ def cmd_index_all(args):
     tfidf.apply_svd(k=args.k)
 
     print("\n[4/5] HNSW индекс...")
-    from hnsw_search import build_index
+    from searches.hnsw_search import build_index
     build_index()
 
     print("\n[5/5] Нейронные векторы...")
-    from neural_search import NeuralSearcher
+    from searches.neural_search import NeuralSearcher
     neural = NeuralSearcher()
     neural.build()
 
@@ -186,7 +186,7 @@ def cmd_init(args):
         print("\n" + "-" * 70)
         print("[5/10] Лексический индекс (BM25)")
         print("-" * 70)
-        from lecsika_search import build_mode
+        from searches.lecsika_search import build_mode
         build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
 
         print("\n" + "-" * 70)
@@ -200,27 +200,27 @@ def cmd_init(args):
         print("\n" + "=" * 70)
         print("[7/10] HNSW индекс")
         print("=" * 70)
-        from hnsw_search import build_index
+        from searches.hnsw_search import build_index
         build_index()
 
         print("\n" + "-" * 70)
         print("[8/10] Нейронные векторы (multilingual)")
         print("-" * 70)
-        from neural_search import NeuralSearcher
+        from searches.neural_search import NeuralSearcher
         neural = NeuralSearcher()
         neural.build()
 
         print("\n" + "=" * 70)
         print("[9/10] Подготовка LTR датасета")
         print("=" * 70)
-        from prepare_ltr_dataset import prepare_dataset
+        from neural_train_process_data.prepare_ltr_dataset import prepare_dataset
         prepare_dataset()
         
     
         print("\n" + "-" * 70)
         print("[9.5/10] Разделение LTR датасета на train/test")
         print("-" * 70)
-        from split_dataset import split_dataset
+        from neural_train_process_data.split_dataset import split_dataset
         split_dataset()
 
         print("\n" + "-" * 70)

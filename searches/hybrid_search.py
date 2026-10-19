@@ -2,8 +2,8 @@ import sys
 import json
 import numpy as np
 
-from lecsika_search import load_index, calculate_bm25, tokenize
-from hnsw_search import HnswSearcher
+from searches.lecsika_search import load_index, calculate_bm25, tokenize
+from searches.hnsw_search import HnswSearcher
 #TODO:пути
 INDEX_FILE = "json/inverted_index.json"
 CORPUS_FILE = "json/preprocessed_corpus.json"

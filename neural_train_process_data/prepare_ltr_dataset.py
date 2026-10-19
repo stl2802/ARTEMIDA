@@ -1,6 +1,6 @@
 import json
-from feature_extractor import FeatureExtractor
-from hybrid_search import HybridSearcher
+from neural_train_process_data.feature_extractor import FeatureExtractor
+from searches.hybrid_search import HybridSearcher
 
 QUERIES_FILE = "json/queries.json"
 OUTPUT_DATASET_FILE = "json/ltr_dataset.json"

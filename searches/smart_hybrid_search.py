@@ -4,28 +4,28 @@ import os
 from typing import Tuple, Optional
 
 try:
-    from neural_search import NeuralSearcher
+    from searches.neural_search import NeuralSearcher
     NEURAL_AVAILABLE = True
 except ImportError:
     NEURAL_AVAILABLE = False
     print("Внимание: neural_search недоступен (sentence_transformers не установлен)")
 
 try:
-    from ltr_search import LTRSearcher
+    from searches.ltr_search import LTRSearcher
     LTR_AVAILABLE = os.path.exists("model/ltr_model.pkl")
 except ImportError:
     LTR_AVAILABLE = False
     print("Внимание: ltr_search недоступен")
 
 try:
-    from hnsw_search import HnswSearcher
+    from searches.hnsw_search import HnswSearcher
     HNSW_AVAILABLE = os.path.exists("bin/hnsw_index.bin")
 except ImportError:
     HNSW_AVAILABLE = False
     print("Внимание: hnsw_search недоступен")
 
-from lecsika_search import load_index, calculate_bm25, tokenize
-from hybrid_search import HybridSearcher
+from searches.lecsika_search import load_index, calculate_bm25, tokenize
+from searches.hybrid_search import HybridSearcher
 
 
 class QueryAnalyzer:
