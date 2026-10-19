@@ -9,7 +9,6 @@ ALPHA_VALUES = [0.0, 0.25, 0.5, 0.75, 1.0]
 def run_benchmark():
     searcher = HybridSearcher()
     
-    # Загружаем запросы (по 2 из каждой категории для репрезентативности)
     with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
         queries_data = json.load(f)
     
@@ -37,7 +36,6 @@ def run_benchmark():
         
         all_results[query] = {}
         
-        # Таблица: строки - позиции (1-5), колонки - значения α
         header = f"{'Rank':<6}"
         for alpha in ALPHA_VALUES:
             header += f" | {'α='+str(alpha):<14}"
@@ -55,12 +53,10 @@ def run_benchmark():
                     row += f" | {'—':<14}"
             print(row)
         
-        # Сохраняем ID для анализа стабильности
         for alpha in ALPHA_VALUES:
             results = searcher.hybrid_search(query, top_k=5, alpha=alpha)
             all_results[query][alpha] = [r["doc_id"] for r in results]
     
-    # === АНАЛИЗ СТАБИЛЬНОСТИ ===
     print(f"\n\n{'=' * 100}")
     print("АНАЛИЗ СТАБИЛЬНОСТИ ВЫДАЧИ")
     print(f"{'=' * 100}")
@@ -85,17 +81,14 @@ def run_benchmark():
         avg_share = avg_overlap / 5.0
         print(f"{alpha:<8.2f} | {avg_share*100:>6.2f}%{'':<28} | {avg_overlap:>5.2f} из 5")
     
-    # === ИТОГОВЫЙ ВЫВОД ===
     print(f"\n\n{'=' * 100}")
     print("ИТОГОВЫЕ НАБЛЮДЕНИЯ")
     print(f"{'=' * 100}")
     
-    # Считаем, сколько раз топ-1 менялся при разных α
     rank1_changes = 0
     valid_comparisons = 0
     
     for query in test_queries:
-        # Проверяем, есть ли результаты для эталонного alpha=0.5
         if not all_results[query][0.5]:
             print(f"!!!Пропуск запроса '{query}': нет результатов для α=0.5")
             continue 
@@ -106,12 +99,10 @@ def run_benchmark():
             if alpha == 0.5:
                 continue
             
-            # Если для другого alpha результаты есть, сравниваем
             if all_results[query][alpha]:
                 if all_results[query][alpha][0] != top1_at_half:
                     rank1_changes += 1
             else:
-                # Если для другого alpha ничего не нашлось, считаем это как изменение
                 rank1_changes += 1
                 
             valid_comparisons += 1
