@@ -17,13 +17,13 @@ nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 
 # Пути к файлам
-VOCABULARY_FILE = "json/vocabulary.json"
-INVERTED_INDEX_FILE = "json/inverted_index.json"
-SVD_VT_FILE = "npy/svd_vt.npy"
-SVD_VECTORS_FILE = "npy/doc_vectors_svd.npy"
-HNSW_INDEX_FILE = "bin/hnsw_index.bin"
-DOC_IDS_FILE = "json/doc_ids.json"
-QUERIES_FILE = "json/queries.json"
+VOCABULARY_FILE = "generated_data/json/vocabulary.json"
+INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
+SVD_VT_FILE = "generated_data/npy/svd_vt.npy"
+SVD_VECTORS_FILE = "generated_data/npy/doc_vectors_svd.npy"
+HNSW_INDEX_FILE = "generated_data/bin/hnsw_index.bin"
+DOC_IDS_FILE = "generated_data/json/doc_ids.json"
+QUERIES_FILE = "generated_data/json/queries.json"
 
 # Параметры HNSW
 M = 16

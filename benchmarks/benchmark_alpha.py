@@ -2,7 +2,7 @@ import sys
 import json
 from searches.hybrid_search import HybridSearcher, calculate_hybrid_score, DEFAULT_ALPHA
 
-QUERIES_FILE = "json/queries.json"
+QUERIES_FILE = "generated_data/json/queries.json"
 ALPHA_VALUES = [0.0, 0.25, 0.5, 0.75, 1.0]
 
 

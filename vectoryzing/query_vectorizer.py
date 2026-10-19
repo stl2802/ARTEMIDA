@@ -14,8 +14,8 @@ nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 ##
 
-VOCABULARY_FILE = "json/vocabulary.json"
-INVERTED_INDEX_FILE = "json/inverted_index.json"
+VOCABULARY_FILE = "generated_data/json/vocabulary.json"
+INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
 
 class QueryVectorizer:
     def __init__(self, inverted_index_path=INVERTED_INDEX_FILE):
@@ -119,7 +119,6 @@ class QueryVectorizer:
 
 
 def main():
-    # Пример использования
     vectorizer = QueryVectorizer()
     
     queries = [

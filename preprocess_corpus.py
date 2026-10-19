@@ -10,8 +10,8 @@ nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 
 #TODO: пути кросплатформенность
-INPUT_FILE:str = "json/corpus.json"
-OUTPUT_FILE:str = "json/preprocessed_corpus.json"
+INPUT_FILE:str = "generated_data/json/corpus.json"
+OUTPUT_FILE:str = "generated_data/json/preprocessed_corpus.json"
 
 def preprocess_text(text: str) -> str:
     text:str = text.lower()

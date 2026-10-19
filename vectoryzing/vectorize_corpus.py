@@ -2,8 +2,8 @@ import json
 from collections import Counter
 
 #TODO: пути
-INPUT_FILE = "json/preprocessed_corpus.json"
-OUTPUT_FILE = "json/vocabulary.json"
+INPUT_FILE = "generated_data/json/preprocessed_corpus.json"
+OUTPUT_FILE = "generated_data/json/vocabulary.json"
 
 def build_vocabulary():
     with open(INPUT_FILE, 'r', encoding='utf-8') as f:

@@ -3,10 +3,10 @@ import numpy as np
 import sys
 from sentence_transformers import SentenceTransformer
 
-CORPUS_FILE = "json/preprocessed_corpus.json"
-INVERTED_INDEX_FILE = "json/inverted_index.json"
-NEURAL_DOC_IDS_FILE = "json/neural_doc_ids.json"
-NEURAL_VECTORS_FILE = "npy/neural_doc_vectors.npy"
+CORPUS_FILE = "generated_data/json/preprocessed_corpus.json"
+INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
+NEURAL_DOC_IDS_FILE = "generated_data/json/neural_doc_ids.json"
+NEURAL_VECTORS_FILE = "generated_data/npy/neural_doc_vectors.npy"
 
 class NeuralSearcher:
     def __init__(self):
@@ -92,7 +92,7 @@ def main():
         searcher.load()
         
         try:
-            with open("json/queries.json", 'r', encoding='utf-8') as f:
+            with open("generated_data/json/queries.json", 'r', encoding='utf-8') as f:
                 queries_data = json.load(f)
             # БЕРЕМ РУССКИЕ ЗАПРОСЫ для демонстрации кросс-языкового поиска!
             queries = (

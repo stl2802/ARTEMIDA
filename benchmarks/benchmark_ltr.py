@@ -4,7 +4,7 @@ import numpy as np
 from searches.hybrid_search import HybridSearcher
 from searches.ltr_search import LTRSearcher
 
-TEST_FILE = "json/ltr_test.json"
+TEST_FILE = "generated_data/json/ltr_test.json"
 
 
 def dcg_at_k(relevances, k):

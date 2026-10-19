@@ -5,9 +5,9 @@ import numpy as np
 from searches.lecsika_search import load_index, calculate_bm25, tokenize
 from searches.hnsw_search import HnswSearcher
 #TODO:пути
-INDEX_FILE = "json/inverted_index.json"
-CORPUS_FILE = "json/preprocessed_corpus.json"
-QUERIES_FILE = "json/queries.json"
+INDEX_FILE = "generated_data/json/inverted_index.json"
+CORPUS_FILE = "generated_data/json/preprocessed_corpus.json"
+QUERIES_FILE = "generated_data/json/queries.json"
 
 # Значение α по умолчанию (вес лексического поиска)
 DEFAULT_ALPHA = 0.5
@@ -151,11 +151,11 @@ def build_mode():
     except Exception as e:
         print(f"\n!!!Ошибка при загрузке индексов: {e}")
         print("Убедитесь, что все необходимые файлы существуют:")
-        print("  - json/inverted_index.json")
-        print("  - json/preprocessed_corpus.json")
-        print("  - npy/doc_vectors_svd.npy")
-        print("  - bin/hnsw_index.bin")
-        print("  - json/doc_ids.json")
+        print("  - generated_data/json/inverted_index.json")
+        print("  - generated_data/json/preprocessed_corpus.json")
+        print("  - generated_data/npy/doc_vectors_svd.npy")
+        print("  - generated_data/bin/hnsw_index.bin")
+        print("  - generated_data/json/doc_ids.json")
 
 
 def search_mode():

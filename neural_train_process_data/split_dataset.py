@@ -1,9 +1,9 @@
 import json
 import random
 
-DATASET_FILE = "json/ltr_dataset.json"
-TRAIN_FILE = "json/ltr_train.json"
-TEST_FILE = "json/ltr_test.json"
+DATASET_FILE = "generated_data/json/ltr_dataset.json"
+TRAIN_FILE = "generated_data/json/ltr_train.json"
+TEST_FILE = "generated_data/json/ltr_test.json"
 
 def split_dataset(train_queries=30, test_queries=10, seed=42):
     """

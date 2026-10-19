@@ -4,7 +4,7 @@ from pathlib import Path
 
 FOLDER_NAME:str = "literature"
 #TODO: через os сделать кросплатформенное преобразование пути
-OUTPUT_FILE:str = "json/corpus.json"
+OUTPUT_FILE:str = "generated_data/json/corpus.json"
 
 
 def clean_text(text: str) -> str:

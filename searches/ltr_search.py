@@ -10,9 +10,9 @@ from neural_train_process_data.feature_extractor import FeatureExtractor
 from searches.hybrid_search import HybridSearcher
 
 MODEL_FILE = "model/ltr_model.pkl"
-FEATURE_ORDER_FILE = "model/feature_order.json"
-TRAIN_FILE = "json/ltr_train.json"
-TEST_FILE = "json/ltr_test.json"
+FEATURE_ORDER_FILE = "generated_data/model/feature_order.json"
+TRAIN_FILE = "generated_data/json/ltr_train.json"
+TEST_FILE = "generated_data/json/ltr_test.json"
 
 FEATURE_NAMES = [
     "bm25_score",

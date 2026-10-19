@@ -176,7 +176,7 @@ def load_index(index_path):
     return forward_index, inverted_index, data["avg_doc_length"], data["doc_count"]
 
 #TODO: тоже кросбплатформенность путей
-def search_mode(index_path, queries_path='json/queries.json'):
+def search_mode(index_path, queries_path='generated_data/json/queries.json'):
     forward_index, inverted_index, avg_doc_length, doc_count = load_index(index_path)
     print(f"Индекс загружен: {doc_count} документов, средняя длина {avg_doc_length:.2f}\n")
 
@@ -240,9 +240,9 @@ def main():
 
     if mode == "build":
         #TODO: кросплафторменность путей
-        build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
+        build_mode("generated_data/json/preprocessed_corpus.json", "generated_data/json/inverted_index.json")
     elif mode == "search":
-        search_mode("json/inverted_index.json", "json/queries.json")
+        search_mode("generated_data/json/inverted_index.json", "generated_data/json/queries.json")
     else:
         print(f"Неизвестный режим: {mode}")
 

@@ -7,7 +7,7 @@ def cmd_create_data(args):
     main()
 
 def cmd_corpus(args):
-    """Обработка корпуса в json/corpus.json"""
+    """Обработка корпуса в generated_data/json/corpus.json"""
     from create_data.process_corpus import main
     main()
 
@@ -28,10 +28,10 @@ def cmd_lexical(args):
     """Лексический индекс (BM25)"""
     if args.mode == "build":
         from searches.lecsika_search import build_mode
-        build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
+        build_mode("generated_data/json/preprocessed_corpus.json", "generated_data/json/inverted_index.json")
     elif args.mode == "search":
         from searches.lecsika_search import search_mode
-        search_mode("json/inverted_index.json", "json/queries.json")
+        search_mode("generated_data/json/inverted_index.json", "generated_data/json/queries.json")
 
 
 def cmd_tfidf(args):
@@ -114,7 +114,7 @@ def cmd_index_all(args):
 
     print("\n[2/5] Лексический индекс...")
     from searches.lecsika_search import build_mode
-    build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
+    build_mode("generated_data/json/preprocessed_corpus.json", "generated_data/json/inverted_index.json")
 
     print("\n[3/5] TF-IDF + SVD...")
     from searches.tfidf_search import TfidfSearcher
@@ -187,7 +187,7 @@ def cmd_init(args):
         print("[5/10] Лексический индекс (BM25)")
         print("-" * 70)
         from searches.lecsika_search import build_mode
-        build_mode("json/preprocessed_corpus.json", "json/inverted_index.json")
+        build_mode("generated_data/json/preprocessed_corpus.json", "generated_data/json/inverted_index.json")
 
         print("\n" + "-" * 70)
         print("[6/10] TF-IDF векторы + SVD")
@@ -235,22 +235,22 @@ def cmd_init(args):
         print("\nВсе файлы сгенерированы:")
         if flag:
             print("  - literature/")
-        print("  - json/corpus.json")
-        print("  - json/preprocessed_corpus.json")
-        print("  - json/inverted_index.json")
-        print("  - json/vocabulary.json")
-        print("  - json/doc_ids.json")
-        print("  - json/neural_doc_ids.json")
-        print("  - json/queries.json")
-        print("  - json/ltr_dataset.json")
-        print("  - json/ltr_train.json")
-        print("  - json/ltr_test.json")
-        print("  - npy/doc_vectors_svd.npy")
-        print("  - npy/svd_vt.npy")
-        print("  - npy/neural_doc_vectors.npy")
-        print("  - bin/hnsw_index.bin")
-        print("  - model/ltr_model.pkl")
-        print("  - model/feature_order.json")
+        print("  - generated_data/json/corpus.json")
+        print("  - generated_data/json/preprocessed_corpus.json")
+        print("  - generated_data/json/inverted_index.json")
+        print("  - generated_data/json/vocabulary.json")
+        print("  - generated_data/json/doc_ids.json")
+        print("  - generated_data/json/neural_doc_ids.json")
+        print("  - generated_data/json/queries.json")
+        print("  - generated_data/json/ltr_dataset.json")
+        print("  - generated_data/json/ltr_train.json")
+        print("  - generated_data/json/ltr_test.json")
+        print("  - generated_data/npy/doc_vectors_svd.npy")
+        print("  - generated_data/npy/svd_vt.npy")
+        print("  - generated_data/npy/neural_doc_vectors.npy")
+        print("  - generated_data/bin/hnsw_index.bin")
+        print("  - generated_data/model/ltr_model.pkl")
+        print("  - generated_data/model/feature_order.json")
         print("\nТеперь можно использовать все команды поиска:")
         print("  python main.py smart-hybrid  - умный гибридный поиск")
         print("  python main.py hybrid search   - гибридный поиск")
@@ -375,7 +375,7 @@ def _load_test_queries():
     """Загрузка тестовых запросов"""
     import json
     try:
-        with open("json/queries.json", 'r', encoding='utf-8') as f:
+        with open("generated_data/json/queries.json", 'r', encoding='utf-8') as f:
             data = json.load(f)
         return (
             [q["en"] if isinstance(q, dict) else q for q in data["queries"]["exact_terms"][:2]] +

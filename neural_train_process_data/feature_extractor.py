@@ -6,10 +6,10 @@ from sentence_transformers import SentenceTransformer
 
 from searches.lecsika_search import load_index, calculate_bm25, tokenize
 
-INVERTED_INDEX_FILE = "json/inverted_index.json"
-VOCABULARY_FILE = "json/vocabulary.json"
-NEURAL_VECTORS_FILE = "npy/neural_doc_vectors.npy"
-NEURAL_DOC_IDS_FILE = "json/neural_doc_ids.json"
+INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
+VOCABULARY_FILE = "generated_data/json/vocabulary.json"
+NEURAL_VECTORS_FILE = "generated_data/npy/neural_doc_vectors.npy"
+NEURAL_DOC_IDS_FILE = "generated_data/json/neural_doc_ids.json"
 
 
 class FeatureExtractor:

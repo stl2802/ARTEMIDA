@@ -5,8 +5,8 @@ import lightgbm as lgb
 import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-TRAIN_FILE = "json/ltr_train.json"
-TEST_FILE = "json/ltr_test.json"
+TRAIN_FILE = "generated_data/json/ltr_train.json"
+TEST_FILE = "generated_data/json/ltr_test.json"
 MODEL_DIR = "model"
 MODEL_FILE = "model/ltr_model.pkl"
 
@@ -131,9 +131,9 @@ def train_model():
     joblib.dump(model, MODEL_FILE)
     print(f"   Модель: {MODEL_FILE}")
     
-    with open("model/feature_order.json", 'w', encoding='utf-8') as f:
+    with open("generated_data/model/feature_order.json", 'w', encoding='utf-8') as f:
         json.dump(FEATURE_NAMES, f, ensure_ascii=False, indent=2)
-    print(f"   Порядок признаков: model/feature_order.json")
+    print(f"   Порядок признаков: generated_data/model/feature_order.json")
     
     print("\n" + "-" * 60)
     print("ОБУЧЕНИЕ ЗАВЕРШЕНО")

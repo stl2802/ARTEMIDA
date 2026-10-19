@@ -11,15 +11,15 @@ from nltk.stem import PorterStemmer
 nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 
-CORPUS_FILE = "json/preprocessed_corpus.json"
-VOCABULARY_FILE = "json/vocabulary.json"
-INVERTED_INDEX_FILE = "json/inverted_index.json"
+CORPUS_FILE = "generated_data/json/preprocessed_corpus.json"
+VOCABULARY_FILE = "generated_data/json/vocabulary.json"
+INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
 
-DOC_VECTORS_FILE = "npy/doc_vectors.npy"
-DOC_IDS_FILE = "json/doc_ids.json"
+DOC_VECTORS_FILE = "generated_data/npy/doc_vectors.npy"
+DOC_IDS_FILE = "generated_data/json/doc_ids.json"
 
-DOC_VECTORS_SVD_FILE = "npy/doc_vectors_svd.npy"
-SVD_VT_FILE = "npy/svd_vt.npy"
+DOC_VECTORS_SVD_FILE = "generated_data/npy/doc_vectors_svd.npy"
+SVD_VT_FILE = "generated_data/npy/svd_vt.npy"
 
 
 class TfidfSearcher:

@@ -19,7 +19,7 @@ except ImportError:
 
 try:
     from searches.hnsw_search import HnswSearcher
-    HNSW_AVAILABLE = os.path.exists("bin/hnsw_index.bin")
+    HNSW_AVAILABLE = os.path.exists("generated_data/bin/hnsw_index.bin")
 except ImportError:
     HNSW_AVAILABLE = False
     print("Внимание: hnsw_search недоступен")
@@ -119,7 +119,7 @@ class SmartHybridSearcher:
 
         print("Загрузка лексического индекса...")
         self.forward_index, self.inverted_index, self.avg_doc_length, self.doc_count = \
-            load_index("json/inverted_index.json")
+            load_index("generated_data/json/inverted_index.json")
 
         print("Загрузка гибридного поисковика...")
         self.hybrid_searcher = HybridSearcher()
@@ -292,7 +292,7 @@ def search_mode():
 
     test_queries = []
     try:
-        with open("json/queries.json", 'r', encoding='utf-8') as f:
+        with open("generated_data/json/queries.json", 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         test_queries = (
             [q["en"] if isinstance(q, dict) else q for q in queries_data["queries"]["exact_terms"][:2]] +

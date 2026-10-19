@@ -2,8 +2,8 @@ import json
 from neural_train_process_data.feature_extractor import FeatureExtractor
 from searches.hybrid_search import HybridSearcher
 
-QUERIES_FILE = "json/queries.json"
-OUTPUT_DATASET_FILE = "json/ltr_dataset.json"
+QUERIES_FILE = "generated_data/json/queries.json"
+OUTPUT_DATASET_FILE = "generated_data/json/ltr_dataset.json"
 
 
 def prepare_dataset(top_k_candidates=30):
