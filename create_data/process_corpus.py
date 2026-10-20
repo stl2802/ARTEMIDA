@@ -1,10 +1,12 @@
 import json
 import re
 from pathlib import Path
+import os
 
 FOLDER_NAME:str = "literature"
 #TODO: через os сделать кросплатформенное преобразование пути
 OUTPUT_FILE:str = "generated_data/json/corpus.json"
+os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
 
 def clean_text(text: str) -> str:

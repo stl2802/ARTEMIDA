@@ -53,7 +53,8 @@ class BenchmarkRunner:
         self.doc_freq = {term: len(postings) for term, postings in index_data["inverted_index"].items()}
         
         self.V_k = np.load(SVD_VT_FILE)
-        
+        import os
+        os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
         with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         

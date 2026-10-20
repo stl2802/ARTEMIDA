@@ -32,7 +32,8 @@ def prepare_dataset(top_k_candidates=30):
     
     print("\n[2] Инициализация HybridSearcher...")
     searcher = HybridSearcher()
-    
+    import os
+    os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
     with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
         queries_data = json.load(f)
     

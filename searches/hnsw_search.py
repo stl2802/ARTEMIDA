@@ -167,6 +167,7 @@ def build_index():
     
     index.set_ef(EF_SEARCH)
     
+    os.makedirs(os.path.dirname(HNSW_INDEX_FILE), exist_ok=True)
     index.save_index(HNSW_INDEX_FILE)
     
     #ПОЛУЧЕНИЕ ПАРАМЕТРОВ ИНДЕКСА
@@ -205,6 +206,8 @@ def search_mode():
     searcher = HnswSearcher()
     
     try:
+        import os
+        os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
         with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         

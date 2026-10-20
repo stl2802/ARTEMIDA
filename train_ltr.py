@@ -7,8 +7,11 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 TRAIN_FILE = "generated_data/json/ltr_train.json"
 TEST_FILE = "generated_data/json/ltr_test.json"
-MODEL_DIR = "model"
-MODEL_FILE = "model/ltr_model.pkl"
+
+
+MODEL_DIR = "generated_data/model"
+MODEL_FILE = os.path.join(MODEL_DIR, "ltr_model.pkl")
+FEATURE_ORDER_FILE = os.path.join(MODEL_DIR, "feature_order.json")
 
 FEATURE_NAMES = [
     "bm25_score",           # 1. Оценка BM25
@@ -130,10 +133,10 @@ def train_model():
     os.makedirs(MODEL_DIR, exist_ok=True)
     joblib.dump(model, MODEL_FILE)
     print(f"   Модель: {MODEL_FILE}")
-    
-    with open("generated_data/model/feature_order.json", 'w', encoding='utf-8') as f:
+
+    with open(FEATURE_ORDER_FILE, 'w', encoding='utf-8') as f:
         json.dump(FEATURE_NAMES, f, ensure_ascii=False, indent=2)
-    print(f"   Порядок признаков: generated_data/model/feature_order.json")
+    print(f"   Порядок признаков: {FEATURE_ORDER_FILE}")
     
     print("\n" + "-" * 60)
     print("ОБУЧЕНИЕ ЗАВЕРШЕНО")

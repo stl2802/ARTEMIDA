@@ -8,7 +8,8 @@ ALPHA_VALUES = [0.0, 0.25, 0.5, 0.75, 1.0]
 
 def run_benchmark():
     searcher = HybridSearcher()
-    
+    import os
+    os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
     with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
         queries_data = json.load(f)
     

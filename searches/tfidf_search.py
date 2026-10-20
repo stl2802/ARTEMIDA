@@ -16,6 +16,7 @@ VOCABULARY_FILE = "generated_data/json/vocabulary.json"
 INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
 
 DOC_VECTORS_FILE = "generated_data/npy/doc_vectors.npy"
+os.makedirs(os.path.dirname(DOC_VECTORS_FILE), exist_ok=True)
 DOC_IDS_FILE = "generated_data/json/doc_ids.json"
 
 DOC_VECTORS_SVD_FILE = "generated_data/npy/doc_vectors_svd.npy"

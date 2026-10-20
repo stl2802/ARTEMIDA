@@ -6,6 +6,11 @@ def cmd_create_data(args):
     from create_data.literature_installer import main
     main()
 
+def cmd_create_queries(args):
+    """создание тестовых запросов"""
+    from create_data.generate_queries import main
+    main()
+
 def cmd_corpus(args):
     """Обработка корпуса в generated_data/json/corpus.json"""
     from create_data.process_corpus import main
@@ -160,9 +165,15 @@ def cmd_init(args):
         print("\n" + "-" * 70)
         print("[1/10] создание тестовых данных")
         print("-" * 70)
-        from create_data.literature_installer import main
-        main()
+        from create_data.literature_installer import main as literature_installer_main
+        literature_installer_main()
         flag = True
+    if not os.path.exists("generated_data/json/queries.json"):
+        print("\n" + "-" * 70)
+        print("[1.5/10] создание тестовых данных запросов")
+        print("-" * 70)
+        from create_data.generate_queries import generate_queries as generate_queries_main
+        generate_queries_main()
 
     try:
         print("\n" + "-" * 70)
@@ -405,6 +416,9 @@ def main():
     
     p_create_data = subparsers.add_parser("create-data", help="Создание литературы для поиска в ней")
     p_create_data.set_defaults(func=cmd_create_data)
+    
+    p_create_queries = subparsers.add_parser("create-queries", help="Создание тестовых запросов")
+    p_create_queries.set_defaults(func=cmd_create_queries)
     
     p_corpus = subparsers.add_parser("corpus", help="Обработка корпуса из literature/")
     p_corpus.set_defaults(func=cmd_corpus)

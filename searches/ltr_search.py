@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from neural_train_process_data.feature_extractor import FeatureExtractor
 from searches.hybrid_search import HybridSearcher
 
-MODEL_FILE = "model/ltr_model.pkl"
+MODEL_FILE = "generated_data/model/ltr_model.pkl"
 FEATURE_ORDER_FILE = "generated_data/model/feature_order.json"
 TRAIN_FILE = "generated_data/json/ltr_train.json"
 TEST_FILE = "generated_data/json/ltr_test.json"

@@ -170,6 +170,8 @@ def search_mode():
     
     test_queries = []
     try:
+        import os
+        os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
         with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         test_queries = (
