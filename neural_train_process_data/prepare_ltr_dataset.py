@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import json
 from neural_train_process_data.feature_extractor import FeatureExtractor
 from searches.hybrid_search import HybridSearcher
@@ -32,7 +36,6 @@ def prepare_dataset(top_k_candidates=30):
     
     print("\n[2] Инициализация HybridSearcher...")
     searcher = HybridSearcher()
-    import os
     os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
     with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
         queries_data = json.load(f)
@@ -66,12 +69,16 @@ def prepare_dataset(top_k_candidates=30):
             
             features = extractor.get_features(query_text, doc_id)
 
+            # Метки релевантности:
+            # 1 - полностью соответствует (топ-5)
+            # 2 - частично соответствует (места 6-15)
+            # 3 - не соответствует (места 16-30)
             if rank < 5:
-                relevance_label = 3
+                relevance_label = 1
             elif rank < 15:
                 relevance_label = 2
             else:
-                relevance_label = 1
+                relevance_label = 3
             
             data_pair = {
                 "query_id": query_id,
@@ -104,9 +111,9 @@ def prepare_dataset(top_k_candidates=30):
         labels_count[item["relevance_label"]] += 1
     
     print(f"\n   Распределение меток:")
-    print(f"   - Метка 3 (высокая): {labels_count[3]}")
-    print(f"   - Метка 2 (средняя): {labels_count[2]}")
-    print(f"   - Метка 1 (низкая): {labels_count[1]}")
+    print(f"   - Метка 1 (полностью соответствует): {labels_count[1]}")
+    print(f"   - Метка 2 (частично соответствует): {labels_count[2]}")
+    print(f"   - Метка 3 (не соответствует): {labels_count[3]}")
     
     print("\n" + "-" * 60)
     print("ГОТОВО")

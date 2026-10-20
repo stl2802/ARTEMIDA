@@ -1,8 +1,12 @@
 import json
 import math
+import os
+import sys
 import numpy as np
 from collections import Counter
 from sentence_transformers import SentenceTransformer
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from searches.lecsika_search import load_index, calculate_bm25, tokenize
 
@@ -83,7 +87,7 @@ class FeatureExtractor:
         # --- Признак 2: Косинусное сходство TF-IDF-векторов (задание 3) ---
         q_tfidf = self._calculate_tfidf_vector(query_tokens)
         
-        # word_freq - это Counter, поэтому разворачиваем его в список токенов
+        # word_freq - это Counter, поэтому разворачиваю его в список токенов
         doc_tokens_list = []
         for word, freq in entry.word_freq.items():
             doc_tokens_list.extend([word] * freq)
@@ -96,7 +100,7 @@ class FeatureExtractor:
         else:
             tfidf_cosine = 0.0
             
-        # --- Признак 3: Косинусное сходство нейросетевых векторов (из neural_search.py) ---
+        # --- Признак 3: Косинусное сходство нейросетевых векторов ---
         # Вектор документа уже нормализован
         doc_neural_idx = self.neural_id_to_idx.get(doc_id)
         if doc_neural_idx is not None:

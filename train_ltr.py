@@ -1,9 +1,12 @@
 import json
 import os
+import sys
 import numpy as np
 import lightgbm as lgb
 import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 TRAIN_FILE = "generated_data/json/ltr_train.json"
 TEST_FILE = "generated_data/json/ltr_test.json"

@@ -194,21 +194,42 @@ def search_mode():
         print(f"\nОшибка: {e}")
         return
     
-    print("\nВведите поисковый запрос (или 'exit' для выхода):\n")
+    test_queries = [
+        # Точные термины
+        "neural network optimization",
+        "quantum computing algorithms",
+        "machine learning classification",
+        # Описательные запросы
+        "how to improve model accuracy in deep learning",
+        "methods for natural language processing",
+        # Короткие запросы
+        "transformer architecture",
+        "gradient descent",
+        "attention mechanism",
+        # Сложные/ошибочные запросы
+        "optimization techniques for training large scale models",
+        "comparison of supervised and unsupervised learning"
+    ]
+    
+    print(f"\nЗагружено {len(test_queries)} тестовых запросов\n")
     
     while True:
-        try:
-            query = input("> ").strip()
-        except (EOFError, KeyboardInterrupt):
-            print("\n\nДо свидания!")
-            break
-        
-        if query.lower() in ['exit', 'quit', 'q']:
-            print("\nДо свидания!")
-            break
-        
-        if not query:
-            continue
+        if test_queries:
+            query = test_queries.pop(0)
+            print(f"Запрос: '{query}'")
+        else:
+            try:
+                query = input("\nВведите запрос (или 'exit'): ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\n\nДо свидания!")
+                break
+            
+            if query.lower() in ['exit', 'quit', 'q']:
+                print("\nДо свидания!")
+                break
+            
+            if not query:
+                continue
         
         results = searcher.search(query, top_k=5)
         
