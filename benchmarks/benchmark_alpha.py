@@ -1,4 +1,8 @@
 import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import json
 from searches.hybrid_search import HybridSearcher, calculate_hybrid_score, DEFAULT_ALPHA
 

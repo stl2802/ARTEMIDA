@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
-from neural_train_process_data.feature_extractor import FeatureExtractor
+from feature_extractor import FeatureExtractor
 from searches.hybrid_search import HybridSearcher
 
 QUERIES_FILE = "generated_data/json/queries.json"

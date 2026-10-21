@@ -1,6 +1,10 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import re
 import json
-import os
 from typing import Tuple, Optional
 
 try:
@@ -12,7 +16,7 @@ except ImportError:
 
 try:
     from searches.ltr_search import LTRSearcher
-    LTR_AVAILABLE = os.path.exists("model/ltr_model.pkl")
+    LTR_AVAILABLE = os.path.exists("generated_data/model/ltr_model.pkl")
 except ImportError:
     LTR_AVAILABLE = False
     print("Внимание: ltr_search недоступен")
