@@ -4,8 +4,6 @@
 
 ARTEMIDA (Advanced Retrieval Through Enhanced Multi-method Intelligent Document Architecture) — это гибридная поисковая система, объединяющая множество подходов к информационному поиску для достижения максимальной релевантности результатов.
 
-### Проблема
-
 Традиционные поисковые системы используют один метод поиска:
 - **Лексический поиск** (BM25) хорошо находит документы с точными совпадениями слов, но не понимает синонимы и смысл
 - **Векторный поиск** (TF-IDF) учитывает частоту слов, но неcaptures семантику
@@ -55,6 +53,168 @@ ARTEMIDA объединяет все эти методы и добавляет �
 ### Корпус документов
 
 В качестве текста документа используется аннотация (abstract) научной статьи с arXiv. Аннотация содержит ключевые термины и семантическое ядро работы, что достаточно для задач информационного поиска, при этом избегает проблем с лицензией CC-BY на полные тексты PDF.
+
+## Как начать использовать систему со своими запросами
+
+### Работа с собственными запросами
+
+Для использования системы с вашими собственными поисковыми запросами необходимо создать или изменить файл:
+
+```
+generated_data/json/queries.json
+```
+
+### Структура файла запросов
+
+```json
+{
+    "queries": {
+        "exact_terms": [
+            "neural networks",
+            "machine learning", 
+            "deep learning",
+            "natural language processing"
+        ],
+        "detailed_queries": [
+            "What are the applications of neural networks in computer vision?",
+            "How does gradient boosting algorithm work in ensemble methods?",
+            "Explain transformer architecture in natural language processing"
+        ],
+        "short_queries": [
+            "ML algorithms",
+            "AI ethics",
+            "data science"
+        ],
+        "error_queries": [
+            "neural netwroks",
+            "mashine lerning",
+            "deep lerning"
+        ]
+    }
+}
+```
+
+### Шаги для добавления своих запросов для обучения модели и тестирования(основные запросы можно писать в консоли после запуска любого из поисков):
+
+1. **После инициализации проекта** выполните команду:
+   ```bash
+   python main.py init
+   ```
+
+2. **Перейдите в папку** с запросами:
+   ```bash
+   cd generated_data/json
+   ```
+
+3. **Отредактируйте файл** `queries.json`:
+   ```bash
+   # Откройте файл в текстовом редакторе или через команды:
+   # Для Linux/Mac:
+   nano queries.json
+   # Для Windows:
+   notepad queries.json
+   ```
+
+4. **Добавьте свои запросы** в соответствующие категории:
+   - `exact_terms` — точные термины и фразы
+   - `detailed_queries` — развернутые вопросы
+   - `short_queries` — короткие запросы
+   - `error_queries` — запросы с ошибками (для тестирования устойчивости)
+
+### Формирование запросов для разных языков
+
+Система поддерживает мультиязычные запросы (русский и английский). Вы можете добавлять запросы на обоих языках:
+
+```json
+{
+    "queries": {
+        "exact_terms": [
+            "neural networks",
+            {"en": "neural networks", "ru": "нейронные сети"},
+            {"en": "machine learning", "ru": "машинное обучение"}
+        ],
+        "detailed_queries": [
+            "What are the applications of neural networks?",
+            {"en": "How does gradient boosting work?", "ru": "Как работает градиентный бустинг?"}
+        ]
+    }
+}
+```
+
+### Использование запросов в системе
+
+После создания файла `queries.json` система будет автоматически использовать ваши запросы:
+Так же при использовании всех типов поисков будет предложенно вести запрос "на лету", тоесть прямо в cli
+1. **В интерактивном режиме** поиска система сначала предложит запросы из файла
+2. **При тестировании** все методы поиска используют запросы из этого файла
+3. **Для обучения LTR модели** используются запросы из файла для генерации датасета
+
+### Генерация тестовых запросов
+
+Если вы не хотите создавать файл вручную, можно сгенерировать тестовые запросы:
+
+```bash
+# Генерация запросов по умолчанию
+python main.py create-queries
+
+# Просмотр сгенерированных запросов
+python -c "import json; data = json.load(open('generated_data/json/queries.json')); print(json.dumps(data, indent=2, ensure_ascii=False))"
+```
+
+### Рекомендации по созданию запросов
+
+1. **Разнообразие** — добавляйте запросы разной длины и сложности
+2. **Тестирование граничных случаев** — включайте запросы с ошибками и опечатками
+3. **Релевантность корпусу** — запросы должны соответствовать тематике документов
+4. **Мультиязычность** — добавляйте как русские, так и английские запросы
+5. **Категоризация** — группируйте похожие запросы в одни категории
+
+### Пример для научного корпуса
+
+Если ваш корпус содержит научные статьи по компьютерным наукам, добавьте:
+
+```json
+{
+    "queries": {
+        "exact_terms": [
+            "transformer architecture",
+            "attention mechanism",
+            "convolutional neural networks",
+            "reinforcement learning"
+        ],
+        "detailed_queries": [
+            "How does the attention mechanism work in transformer models?",
+            "What are the differences between supervised and unsupervised learning?",
+            "Explain the backpropagation algorithm in neural networks"
+        ],
+        "short_queries": [
+            "CNN",
+            "RNN",
+            "GAN",
+            "BERT"
+        ],
+        "error_queries": [
+            "tranformer architecture",
+            "convolutional nerual networks",
+            "reinforcment learning"
+        ]
+    }
+}
+```
+
+### Быстрый старт с собственными запросами
+
+1. **Создайте** файл `generated_data/json/queries.json` с вашими запросами
+2. **Запустите** полную инициализацию:
+   ```bash
+   python main.py init
+   ```
+3. **Начните поиск** с вашими запросами:
+   ```bash
+   python main.py smart-hybrid
+   ```
+
+Система будет использовать ваши запросы для всех операций поиска и обучения.
 
 ## Быстрый старт
 
@@ -301,12 +461,6 @@ LTR — это подход машинного обучения для пере�
 - **Образовательные системы** — поиск учебных материалов
 - **Исследования IR** — платформа для экспериментов с методами поиска
 
-## Требования
-
-Установите зависимости:
-
-```bash
-pip install -r requirements.txt
 ```
 
 Основные зависимости:

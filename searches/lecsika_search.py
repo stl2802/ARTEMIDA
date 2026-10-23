@@ -4,21 +4,9 @@ import sys
 import json
 import math
 from dataclasses import dataclass, field
-from collections import Counter, defaultdict
+from collections import Counter
 
-
-## посмотреть может лучше импортировать токенезацию из процессинга
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-
-# Инициализация (один раз при старте)
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
-stop_words = set(stopwords.words('english'))
-stemmer = PorterStemmer()
-##
+from utils.text_processor import preprocess_text
 
 @dataclass
 class ForwardEntry:
@@ -48,15 +36,6 @@ class InvertedEntry:
 
     def doc_freq(self):
         return len(self.postings)
-
-
-def tokenize(text):
-    text = text.lower()
-    tokens = word_tokenize(text)
-    tokens = [t for t in tokens if re.match(r'^[a-z]+$', t)]
-    tokens = [t for t in tokens if t not in stop_words]
-    tokens = [stemmer.stem(t) for t in tokens]
-    return tokens
 
 
 def calculate_bm25(query_tokens, doc_id, forward_index, inverted_index, avg_doc_length, k1=1.5, b=0.75):
@@ -99,6 +78,7 @@ def build_mode(corpus_path, output_path):
 
     for doc in corpus:
         doc_id = doc["id"]
+        # Используем предобработанный текст из корпуса
         tokens = doc["text"].split()
         unique_words = set(tokens)
 
@@ -201,7 +181,7 @@ def search_mode(index_path, queries_path='generated_data/json/queries.json'):
             if query.lower() == 'exit':
                 break
 
-        query_tokens = tokenize(query)
+        query_tokens = preprocess_text(query, language='auto')
         if not query_tokens:
             print("После предобработки запрос пуст\n")
             continue

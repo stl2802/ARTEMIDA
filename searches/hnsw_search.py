@@ -6,17 +6,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import json
 import math
 import numpy as np
-import re
 import hnswlib
 from collections import Counter
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-import nltk
+
 import time
 
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
+from utils.text_processor import preprocess_text
 
 # Пути к файлам
 VOCABULARY_FILE = "generated_data/json/vocabulary.json"
@@ -35,8 +30,6 @@ EF_SEARCH = 50
 
 class HnswSearcher:
     def __init__(self):
-        self.stop_words = set(stopwords.words('english'))
-        self.stemmer = PorterStemmer()
         
         with open(VOCABULARY_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -67,13 +60,9 @@ class HnswSearcher:
         print(f"HNSW Searcher инициализирован. Размерность: {dim}")
 
     def _preprocess_text(self, text: str) -> list:
-        """Предобработка текста (идентична заданию 4)"""
-        text = text.lower()
-        tokens = word_tokenize(text)
-        tokens = [t for t in tokens if re.match(r'^[a-z]+$', t)]
-        tokens = [t for t in tokens if t not in self.stop_words]
-        tokens = [self.stemmer.stem(t) for t in tokens]
-        return tokens
+        """Предобработка текста (используем общий процессор)"""
+         # Используем мультиязычный режим для обработки смешанного текста
+        return preprocess_text(text, language='auto')
 
     def _calculate_idf(self, token: str) -> float:
         """IDF с сглаживанием"""

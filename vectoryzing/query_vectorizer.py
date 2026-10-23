@@ -4,14 +4,7 @@ import numpy as np
 from collections import Counter
 import re
 
-##TODO: сного же может импортировать
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
+from utils.text_processor import preprocess_text
 ##
 
 VOCABULARY_FILE = "generated_data/json/vocabulary.json"
@@ -34,17 +27,9 @@ class QueryVectorizer:
             for term, postings in index_data["inverted_index"].items()
         }
         
-        self.stop_words = set(stopwords.words('english'))
-        self.stemmer = PorterStemmer()
-    
     def preprocess_query(self, query: str) -> list:
-        """Предобработка запроса (идентична предобработке документов)"""
-        query = query.lower()
-        tokens = word_tokenize(query)
-        tokens = [t for t in tokens if re.match(r'^[a-z]+$', t)]
-        tokens = [t for t in tokens if t not in self.stop_words]
-        tokens = [self.stemmer.stem(t) for t in tokens]
-        return tokens
+        """Предобработка запроса с использованием общего процессора"""
+        return preprocess_text(query, language='auto')
     
     def calculate_idf(self, token: str) -> float:
         """Рассчитывает IDF для токена"""

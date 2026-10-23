@@ -8,12 +8,8 @@ import numpy as np
 import re
 import nltk
 from collections import Counter
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
 
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
+from utils.text_processor import preprocess_text
 
 CORPUS_FILE = "generated_data/json/preprocessed_corpus.json"
 VOCABULARY_FILE = "generated_data/json/vocabulary.json"
@@ -50,9 +46,6 @@ class TfidfSearcher:
                 "summary": entry_data["summary"]
             }
         
-        self.stop_words = set(stopwords.words('english'))
-        self.stemmer = PorterStemmer()
-        
         self.doc_vectors = None  # shape: (num_docs, vocab_size)
         self.doc_ids = None
 
@@ -63,11 +56,7 @@ class TfidfSearcher:
     
     def _preprocess_text(self, text: str) -> list:
         """Предобработка текста (идентична предобработке запроса)"""
-        text = text.lower()
-        tokens = word_tokenize(text)
-        tokens = [t for t in tokens if re.match(r'^[a-z]+$', t)]
-        tokens = [t for t in tokens if t not in self.stop_words]
-        tokens = [self.stemmer.stem(t) for t in tokens]
+        tokens = preprocess_text(text, language='auto')
         return tokens
     
     def _calculate_idf(self, token: str) -> float:

@@ -8,7 +8,9 @@ from sentence_transformers import SentenceTransformer
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from searches.lecsika_search import load_index, calculate_bm25, tokenize
+# Используем общий модуль препроцессинга вместо lecsika_search
+from utils.text_processor import preprocess_text
+from searches.lecsika_search import load_index, calculate_bm25
 
 INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
 VOCABULARY_FILE = "generated_data/json/vocabulary.json"
@@ -69,8 +71,7 @@ class FeatureExtractor:
         
         Возвращает список из 6 float значений.
         """
-        # tokenize из lecsika_search.py
-        query_tokens = tokenize(query_text)
+        query_tokens = preprocess_text(query_text,language='auto')
         
         if not query_tokens or doc_id not in self.forward_index:
             return [0.0] * 6
@@ -125,7 +126,7 @@ class FeatureExtractor:
             overlap_text = 0.0
             
         # --- Признак 5: Доля уникальных слов запроса в заголовке документа ---
-        title_tokens = tokenize(entry.title)
+        title_tokens = preprocess_text(entry.title,language='auto')
         unique_title_words = set(title_tokens)
         if len(unique_query_words) > 0:
             overlap_title = len(unique_query_words & unique_title_words) / len(unique_query_words)

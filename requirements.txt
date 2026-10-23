@@ -4,3 +4,5 @@ matplotlib
 Sentence-Transformers
 hnswlib
 lightgbm
+pymorphy3[fast]
+snowballstemmer
