@@ -11,6 +11,19 @@ def cmd_create_queries(args):
     from create_data.generate_queries import main
     main()
 
+def cmd_ltr(args):
+    """Learning to Rank"""
+    if args.mode == "train":
+        from searches.ltr_search import train_mode
+        train_mode()
+    elif args.mode == "prepare":
+        from neural_train_process_data.prepare_ltr_dataset import prepare_dataset
+        prepare_dataset()
+    elif args.mode == "search":
+        from searches.ltr_search import LTRSearcher
+        searcher = LTRSearcher()
+        _run_ltr_search(searcher)
+
 def cmd_corpus(args):
     """Обработка корпуса в generated_data/json/corpus.json"""
     from create_data.process_corpus import main
@@ -91,20 +104,6 @@ def cmd_smart_hybrid(args):
     """Умный гибридный поиск с автоматическим выбором метода"""
     from searches.smart_hybrid_search import search_mode
     search_mode()
-
-
-def cmd_ltr(args):
-    """Learning to Rank"""
-    if args.mode == "train":
-        from train_ltr import train_model
-        train_model()
-    elif args.mode == "prepare":
-        from neural_train_process_data.prepare_ltr_dataset import prepare_dataset
-        prepare_dataset()
-    elif args.mode == "search":
-        from searches.ltr_search import LTRSearcher
-        searcher = LTRSearcher()
-        _run_ltr_search(searcher)
 
 
 def cmd_index_all(args):
@@ -237,8 +236,8 @@ def cmd_init(args):
         print("\n" + "-" * 70)
         print("[10/10] Обучение LTR модели (LightGBM)")
         print("-" * 70)
-        from train_ltr import train_model
-        train_model()
+        from searches.ltr_search import train_mode
+        train_mode()
 
         print("\n" + "-" * 70)
         print("ПОЛНАЯ ИНИЦИАЛИЗАЦИЯ ЗАВЕРШЕНА УСПЕШНО!")

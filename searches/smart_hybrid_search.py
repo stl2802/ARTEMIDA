@@ -1,5 +1,6 @@
 import sys
 import os
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -16,29 +17,28 @@ except ImportError:
 
 try:
     from searches.ltr_search import LTRSearcher
-    LTR_AVAILABLE = os.path.exists("generated_data/model/ltr_model.pkl")
+    LTR_AVAILABLE = (Path("generated_data") / "model" / "ltr_model.pkl").exists()
 except ImportError:
     LTR_AVAILABLE = False
     print("Внимание: ltr_search недоступен")
 
 try:
     from searches.hnsw_search import HnswSearcher
-    HNSW_AVAILABLE = os.path.exists("generated_data/bin/hnsw_index.bin")
+    HNSW_AVAILABLE = (Path("generated_data") / "bin" / "hnsw_index.bin").exists()
 except ImportError:
     HNSW_AVAILABLE = False
     print("Внимание: hnsw_search недоступен")
 
-from searches.lecsika_search import load_index, calculate_bm25, tokenize
+from searches.lecsika_search import load_index, calculate_bm25
 from searches.hybrid_search import HybridSearcher
+from utils.text_processor import tokenize
 
 
 class QueryAnalyzer:
     """Анализатор запросов для определения типа поиска"""
 
     def __init__(self):
-        # Русские буквы
         self.russian_pattern = re.compile(r'[а-яёА-ЯЁ]')
-        # Паттерн для термина
         self.term_pattern = re.compile(r'^[a-zA-Z\s]{1,20}$')
 
     def detect_language(self, query: str) -> str:
@@ -296,7 +296,8 @@ def search_mode():
 
     test_queries = []
     try:
-        with open("generated_data/json/queries.json", 'r', encoding='utf-8') as f:
+        queries_file = Path("generated_data") / "json" / "queries.json"
+        with open(queries_file, 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         test_queries = (
             [q["en"] if isinstance(q, dict) else q for q in queries_data["queries"]["exact_terms"][:2]] +

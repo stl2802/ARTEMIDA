@@ -1,5 +1,6 @@
 import sys
 import os
+from pathlib import Path
 
 # Добавляем корневую директорию проекта в sys.path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -19,13 +20,13 @@ nltk.download('stopwords', quiet=True)
 from utils.text_processor import preprocess_text
 
 # Пути к файлам
-VOCABULARY_FILE = "generated_data/json/vocabulary.json"
-INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
-SVD_VT_FILE = "generated_data/npy/svd_vt.npy"
-SVD_VECTORS_FILE = "generated_data/npy/doc_vectors_svd.npy"
-HNSW_INDEX_FILE = "generated_data/bin/hnsw_index.bin"
-DOC_IDS_FILE = "generated_data/json/doc_ids.json"
-QUERIES_FILE = "generated_data/json/queries.json"
+VOCABULARY_FILE = Path("generated_data") / "json" / "vocabulary.json"
+INVERTED_INDEX_FILE = Path("generated_data") / "json" / "inverted_index.json"
+SVD_VT_FILE = Path("generated_data") / "npy" / "svd_vt.npy"
+SVD_VECTORS_FILE = Path("generated_data") / "npy" / "doc_vectors_svd.npy"
+HNSW_INDEX_FILE = Path("generated_data") / "bin" / "hnsw_index.bin"
+DOC_IDS_FILE = Path("generated_data") / "json" / "doc_ids.json"
+QUERIES_FILE = Path("generated_data") / "json" / "queries.json"
 
 class BenchmarkRunner:
     def __init__(self):
@@ -55,8 +56,7 @@ class BenchmarkRunner:
         self.doc_freq = {term: len(postings) for term, postings in index_data["inverted_index"].items()}
         
         self.V_k = np.load(SVD_VT_FILE)
-        import os
-        os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
+        QUERIES_FILE.parent.mkdir(exist_ok=True)
         with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         

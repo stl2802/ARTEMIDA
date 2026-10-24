@@ -1,5 +1,6 @@
 import sys
 import os
+from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
@@ -8,7 +9,7 @@ import numpy as np
 from searches.hybrid_search import HybridSearcher
 from searches.ltr_search import LTRSearcher
 
-TEST_FILE = "generated_data/json/ltr_test.json"
+TEST_FILE = Path("generated_data") / "json" / "ltr_test.json"
 
 
 def dcg_at_k(relevances, k):

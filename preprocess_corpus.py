@@ -1,9 +1,9 @@
 import json
+from pathlib import Path
 from utils.text_processor import preprocess_text_to_string
 
-#TODO: пути кросплатформенность
-INPUT_FILE:str = "generated_data/json/corpus.json"
-OUTPUT_FILE:str = "generated_data/json/preprocessed_corpus.json"
+INPUT_FILE: Path = Path("generated_data") / "json" / "corpus.json"
+OUTPUT_FILE: Path = Path("generated_data") / "json" / "preprocessed_corpus.json"
 
 def preprocess_text(text: str) -> str:
     """Обработка текста с использованием мультиязычного процессора"""

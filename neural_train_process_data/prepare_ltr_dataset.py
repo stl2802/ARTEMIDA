@@ -1,13 +1,14 @@
 import sys
 import os
+from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
-from feature_extractor import FeatureExtractor
+from neural_train_process_data.feature_extractor import FeatureExtractor
 from searches.hybrid_search import HybridSearcher
 
-QUERIES_FILE = "generated_data/json/queries.json"
-OUTPUT_DATASET_FILE = "generated_data/json/ltr_dataset.json"
+QUERIES_FILE = Path("generated_data") / "json" / "queries.json"
+OUTPUT_DATASET_FILE = Path("generated_data") / "json" / "ltr_dataset.json"
 
 
 def prepare_dataset(top_k_candidates=30):
@@ -36,7 +37,7 @@ def prepare_dataset(top_k_candidates=30):
     
     print("\n[2] Инициализация HybridSearcher...")
     searcher = HybridSearcher()
-    os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
+    QUERIES_FILE.parent.mkdir(exist_ok=True)
     with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
         queries_data = json.load(f)
     
@@ -100,6 +101,7 @@ def prepare_dataset(top_k_candidates=30):
             print(f"   Обработано {query_idx + 1}/{len(all_queries)} запросов")
     
     print(f"\n[5] Сохранение датасета...")
+    OUTPUT_DATASET_FILE.parent.mkdir(exist_ok=True)
     with open(OUTPUT_DATASET_FILE, 'w', encoding='utf-8') as f:
         json.dump(dataset, f, ensure_ascii=False, indent=2)
     

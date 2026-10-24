@@ -1,5 +1,6 @@
 import sys
 import os
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -13,14 +14,13 @@ import time
 
 from utils.text_processor import preprocess_text
 
-# Пути к файлам
-VOCABULARY_FILE = "generated_data/json/vocabulary.json"
-INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
-SVD_VT_FILE = "generated_data/npy/svd_vt.npy"
-SVD_VECTORS_FILE = "generated_data/npy/doc_vectors_svd.npy"
-HNSW_INDEX_FILE = "generated_data/bin/hnsw_index.bin"
-DOC_IDS_FILE = "generated_data/json/doc_ids.json"
-QUERIES_FILE = "generated_data/json/queries.json"
+VOCABULARY_FILE = Path("generated_data") / "json" / "vocabulary.json"
+INVERTED_INDEX_FILE = Path("generated_data") / "json" / "inverted_index.json"
+SVD_VT_FILE = Path("generated_data") / "npy" / "svd_vt.npy"
+SVD_VECTORS_FILE = Path("generated_data") / "npy" / "doc_vectors_svd.npy"
+HNSW_INDEX_FILE = Path("generated_data") / "bin" / "hnsw_index.bin"
+DOC_IDS_FILE = Path("generated_data") / "json" / "doc_ids.json"
+QUERIES_FILE = Path("generated_data") / "json" / "queries.json"
 
 # Параметры HNSW
 M = 16
@@ -51,7 +51,7 @@ class HnswSearcher:
         _, dim = self.doc_vectors.shape
         
         self.index = hnswlib.Index(space='cosine', dim=dim)
-        self.index.load_index(HNSW_INDEX_FILE, max_elements=self.doc_vectors.shape[0])
+        self.index.load_index(str(HNSW_INDEX_FILE), max_elements=int(self.doc_vectors.shape[0]))
         self.index.set_ef(EF_SEARCH)
         
         with open(DOC_IDS_FILE, 'r', encoding='utf-8') as f:
@@ -158,10 +158,9 @@ def build_index():
     
     index.set_ef(EF_SEARCH)
     
-    os.makedirs(os.path.dirname(HNSW_INDEX_FILE), exist_ok=True)
-    index.save_index(HNSW_INDEX_FILE)
+    os.makedirs(os.path.dirname(str(HNSW_INDEX_FILE)), exist_ok=True)
+    index.save_index(str(HNSW_INDEX_FILE))
     
-    #ПОЛУЧЕНИЕ ПАРАМЕТРОВ ИНДЕКСА
     max_elements = num_vectors
     current_count = num_vectors
     ef_construction = EF_CONSTRUCTION
@@ -197,8 +196,7 @@ def search_mode():
     searcher = HnswSearcher()
     
     try:
-        import os
-        os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
+        QUERIES_FILE.parent.mkdir(exist_ok=True)
         with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         

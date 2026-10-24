@@ -2,11 +2,17 @@ import json
 import re
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
-FOLDER_NAME:str = "literature"
-#TODO: через os сделать кросплатформенное преобразование пути
-OUTPUT_FILE:str = "generated_data/json/corpus.json"
-os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+# Загружаем переменные из .env файла
+env_path = Path('.') / '.env'
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+
+FOLDER_NAME: str = os.getenv('LITERATURE_PATH', 'literature')
+FILE_RES: str = os.getenv('FILE_RES', 'txt')
+OUTPUT_FILE: Path = Path("generated_data") / "json" / "corpus.json"
+OUTPUT_FILE.parent.mkdir(exist_ok=True)
 
 
 def clean_text(text: str) -> str:
@@ -39,14 +45,15 @@ def parse_document(file_path: Path, doc_id: str) -> dict:
     }
 
 def main():
-    folder:Path = Path(FOLDER_NAME)
+    folder: Path = Path(FOLDER_NAME)
     if not folder.exists():
         print(f"Папка '{FOLDER_NAME}' не найдена. Сначала выполните literature_installer.py")
         return
 
     corpus: dict = []
     #TODO: сделать альтернативный путь чтоб не забивать память при обработке более 2к документов
-    txt_files = sorted(folder.glob("doc_*.txt"))
+    pattern = f"doc_*.{FILE_RES}"
+    txt_files = sorted(folder.glob(pattern))
     
     for file_path in txt_files:
         doc_id:str = file_path.stem

@@ -1,5 +1,6 @@
-import sys
+﻿import sys
 import os
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -11,16 +12,16 @@ from collections import Counter
 
 from utils.text_processor import preprocess_text
 
-CORPUS_FILE = "generated_data/json/preprocessed_corpus.json"
-VOCABULARY_FILE = "generated_data/json/vocabulary.json"
-INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
+CORPUS_FILE = Path("generated_data") / "json" / "preprocessed_corpus.json"
+VOCABULARY_FILE = Path("generated_data") / "json" / "vocabulary.json"
+INVERTED_INDEX_FILE = Path("generated_data") / "json" / "inverted_index.json"
 
-DOC_VECTORS_FILE = "generated_data/npy/doc_vectors.npy"
-os.makedirs(os.path.dirname(DOC_VECTORS_FILE), exist_ok=True)
-DOC_IDS_FILE = "generated_data/json/doc_ids.json"
+DOC_VECTORS_FILE = Path("generated_data") / "npy" / "doc_vectors.npy"
+DOC_VECTORS_FILE.parent.mkdir(exist_ok=True)
+DOC_IDS_FILE = Path("generated_data") / "json" / "doc_ids.json"
 
-DOC_VECTORS_SVD_FILE = "generated_data/npy/doc_vectors_svd.npy"
-SVD_VT_FILE = "generated_data/npy/svd_vt.npy"
+DOC_VECTORS_SVD_FILE = Path("generated_data") / "npy" / "doc_vectors_svd.npy"
+SVD_VT_FILE = Path("generated_data") / "npy" / "svd_vt.npy"
 
 
 class TfidfSearcher:
@@ -279,7 +280,8 @@ def main():
         searcher.load()
         
         try:
-            with open("json/queries.json", 'r', encoding='utf-8') as f:
+            queries_file = Path("json") / "queries.json"
+            with open(queries_file, 'r', encoding='utf-8') as f:
                 queries_data = json.load(f)
             queries = (
                 [q["en"] if isinstance(q, dict) else q for q in queries_data["queries"]["exact_terms"][:3]] +

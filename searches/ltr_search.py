@@ -1,29 +1,45 @@
 import sys
 import os
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import json
-import joblib
 import numpy as np
 import lightgbm as lgb
+import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+from dotenv import load_dotenv
+from pathlib import Path
+
+
+env_path = Path('.') / '.env'
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from neural_train_process_data.feature_extractor import FeatureExtractor
 from searches.hybrid_search import HybridSearcher
 
-MODEL_FILE = "generated_data/model/ltr_model.pkl"
-FEATURE_ORDER_FILE = "generated_data/model/feature_order.json"
-TRAIN_FILE = "generated_data/json/ltr_train.json"
-TEST_FILE = "generated_data/json/ltr_test.json"
+
+TRAIN_FILE = Path(os.getenv('TRAIN_FILE', 'generated_data/json/ltr_train.json'))
+TEST_FILE = Path(os.getenv('TEST_FILE', 'generated_data/json/ltr_test.json'))
+
+MODEL_DIR = Path(os.getenv('MODEL_DIR', 'generated_data/model'))
+MODEL_FILE = MODEL_DIR / os.getenv('MODEL_FILE', 'ltr_model.pkl')
+FEATURE_ORDER_FILE = MODEL_DIR / os.getenv('FEATURE_ORDER_FILE', 'feature_order.json')
+
+
+N_ESTIMATORS = int(os.getenv('N_ESTIMATORS', '100'))
+MAX_DEPTH = int(os.getenv('MAX_DEPTH', '5'))
+LEARNING_RATE = float(os.getenv('LEARNING_RATE', '0.1'))
+RANDOM_STATE = int(os.getenv('RANDOM_STATE', '42'))
+
 
 FEATURE_NAMES = [
-    "bm25_score",
-    "tfidf_cosine",
-    "neural_cosine",
-    "word_overlap_text",
-    "word_overlap_title",
-    "doc_length"
+    "bm25_score",           # 1. Оценка BM25
+    "tfidf_cosine",         # 2. TF-IDF Cosine Similarity
+    "neural_cosine",        # 3. Neural Cosine Similarity
+    "word_overlap_text",    # 4. Word Overlap (Text)
+    "word_overlap_title",   # 5. Word Overlap (Title)
+    "doc_length"            # 6. Document Length
 ]
 
 
@@ -115,11 +131,13 @@ class LTRSearcher:
 
 
 def load_data(filepath):
-    """Загружаем данные из JSON."""
+    """Загружаем данные из JSON и разделяем на признаки (X) и метки (y)."""
     with open(filepath, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    X, y = [], []
+    X = []
+    y = []
+    
     for item in data:
         features = [
             item["features"]["bm25_score"],
@@ -135,6 +153,25 @@ def load_data(filepath):
     return np.array(X), np.array(y)
 
 
+def compute_ndcg(y_true, y_pred, k=10):
+    """Вычисляем NDCG@k — метрику качества ранжирования."""
+    order = np.argsort(y_pred)[::-1]
+    top_k_true = y_true[order][:k]
+    
+    gains = top_k_true
+    discounts = np.log2(np.arange(2, len(gains) + 2))
+    dcg = np.sum(gains / discounts)
+    
+    ideal_gains = np.sort(y_true)[::-1][:k]
+    ideal_discounts = np.log2(np.arange(2, len(ideal_gains) + 2))
+    idcg = np.sum(ideal_gains / ideal_discounts)
+    
+    if idcg == 0:
+        return 0.0
+    
+    return dcg / idcg
+
+
 def train_mode():
     """Режим обучения модели."""
     print("=" * 70)
@@ -147,17 +184,21 @@ def train_mode():
     
     print(f"   Обучающая выборка: {len(X_train)} примеров")
     print(f"   Тестовая выборка: {len(X_test)} примеров")
+    print(f"   Количество признаков: {X_train.shape[1]}")
     
     print("\n[2] Обучение модели LightGBM...")
     print("   Алгоритм: Gradient Boosting Regressor")
-    print("   Параметры: n_estimators=100, max_depth=5, learning_rate=0.1")
+    print("   Параметры:")
+    print(f"   - n_estimators: {N_ESTIMATORS}")
+    print(f"   - max_depth: {MAX_DEPTH}")
+    print(f"   - learning_rate: {LEARNING_RATE}")
     
     model = lgb.LGBMRegressor(
-        n_estimators=100,
-        max_depth=5,
-        learning_rate=0.1,
+        n_estimators=N_ESTIMATORS,
+        max_depth=MAX_DEPTH,
+        learning_rate=LEARNING_RATE,
         objective='regression',
-        random_state=42,
+        random_state=RANDOM_STATE,
         verbose=-1
     )
     model.fit(X_train, y_train)
@@ -166,23 +207,40 @@ def train_mode():
     y_pred_train = model.predict(X_train)
     y_pred_test = model.predict(X_test)
     
-    print(f"   Train: MSE={mean_squared_error(y_train, y_pred_train):.4f}, MAE={mean_absolute_error(y_train, y_pred_train):.4f}")
-    print(f"   Test:  MSE={mean_squared_error(y_test, y_pred_test):.4f}, MAE={mean_absolute_error(y_test, y_pred_test):.4f}")
+    print(f"\n   Обучающая выборка:")
+    print(f"   - MSE: {mean_squared_error(y_train, y_pred_train):.4f}")
+    print(f"   - MAE: {mean_absolute_error(y_train, y_pred_train):.4f}")
+    
+    print(f"\n   Тестовая выборка:")
+    print(f"   - MSE: {mean_squared_error(y_test, y_pred_test):.4f}")
+    print(f"   - MAE: {mean_absolute_error(y_test, y_pred_test):.4f}")
+    
+    ndcg_train = compute_ndcg(y_train, y_pred_train, k=10)
+    ndcg_test = compute_ndcg(y_test, y_pred_test, k=10)
+    
+    print(f"\n   NDCG@10:")
+    print(f"   - Train: {ndcg_train:.4f}")
+    print(f"   - Test: {ndcg_test:.4f}")
     
     print("\n[4] Важность признаков:")
-    for name, imp in sorted(zip(FEATURE_NAMES, model.feature_importances_), key=lambda x: x[1], reverse=True):
-        print(f"   {name}: {imp:.2f}")
+    importances = model.feature_importances_
+    for name, imp in sorted(zip(FEATURE_NAMES, importances), key=lambda x: x[1], reverse=True):
+        print(f"   - {name}: {imp:.2f}")
     
     print("\n[5] Сохранение модели...")
-    os.makedirs("model", exist_ok=True)
+    os.makedirs(MODEL_DIR, exist_ok=True)
     joblib.dump(model, MODEL_FILE)
+    print(f"   Модель: {MODEL_FILE}")
+    
     with open(FEATURE_ORDER_FILE, 'w', encoding='utf-8') as f:
         json.dump(FEATURE_NAMES, f, ensure_ascii=False, indent=2)
+    print(f"   Порядок признаков: {FEATURE_ORDER_FILE}")
     
-    print(f"   Модель сохранена: {MODEL_FILE}")
     print("\n" + "=" * 70)
     print("ОБУЧЕНИЕ ЗАВЕРШЕНО")
     print("=" * 70)
+    
+    return model
 
 
 def search_mode():
@@ -197,24 +255,36 @@ def search_mode():
         print(f"\nОшибка: {e}")
         return
     
-    test_queries = [
-        # Точные термины
-        "neural network optimization",
-        "quantum computing algorithms",
-        "machine learning classification",
-        # Описательные запросы
-        "how to improve model accuracy in deep learning",
-        "methods for natural language processing",
-        # Короткие запросы
-        "transformer architecture",
-        "gradient descent",
-        "attention mechanism",
-        # Сложные/ошибочные запросы
-        "optimization techniques for training large scale models",
-        "comparison of supervised and unsupervised learning"
-    ]
-    
-    print(f"\nЗагружено {len(test_queries)} тестовых запросов\n")
+    queries_file = Path("generated_data") / "json" / "queries.json"
+    try:
+        with open(queries_file, 'r', encoding='utf-8') as f:
+            queries_data = json.load(f)
+        test_queries = (
+            [q["en"] if isinstance(q, dict) else q for q in queries_data["queries"]["exact_terms"][:3]] +
+            [q["en"] if isinstance(q, dict) else q for q in queries_data["queries"]["detailed_queries"][:2]] +
+            [q["en"] if isinstance(q, dict) else q for q in queries_data["queries"]["short_queries"][:3]] +
+            [q["en"] if isinstance(q, dict) else q for q in queries_data["queries"]["error_queries"][:2]]
+        )
+        print(f"Загружено {len(test_queries)} тестовых запросов (EN)\n")
+    except FileNotFoundError:
+        print(f"\nФайл запросов не найден: {queries_file}")
+        print("Используем тестовые запросы по умолчанию...\n")
+        test_queries = [
+            # Точные термины
+            "neural network optimization",
+            "quantum computing algorithms",
+            "machine learning classification",
+            # Описательные запросы
+            "how to improve model accuracy in deep learning",
+            "methods for natural language processing",
+            # Короткие запросы
+            "transformer architecture",
+            "gradient descent",
+            "attention mechanism",
+            # Сложные/ошибочные запросы
+            "optimization techniques for training large scale models",
+            "comparison of supervised and unsupervised learning"
+        ]
     
     while True:
         if test_queries:

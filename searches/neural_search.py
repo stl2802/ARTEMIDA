@@ -1,5 +1,6 @@
 import sys
 import os
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -7,10 +8,10 @@ import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-CORPUS_FILE = "generated_data/json/preprocessed_corpus.json"
-INVERTED_INDEX_FILE = "generated_data/json/inverted_index.json"
-NEURAL_DOC_IDS_FILE = "generated_data/json/neural_doc_ids.json"
-NEURAL_VECTORS_FILE = "generated_data/npy/neural_doc_vectors.npy"
+CORPUS_FILE = Path("generated_data") / "json" / "preprocessed_corpus.json"
+INVERTED_INDEX_FILE = Path("generated_data") / "json" / "inverted_index.json"
+NEURAL_DOC_IDS_FILE = Path("generated_data") / "json" / "neural_doc_ids.json"
+NEURAL_VECTORS_FILE = Path("generated_data") / "npy" / "neural_doc_vectors.npy"
 
 class NeuralSearcher:
     def __init__(self):

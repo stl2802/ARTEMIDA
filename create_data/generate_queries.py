@@ -2,8 +2,9 @@
 
 import json
 import os
+from pathlib import Path
 
-OUTPUT_FILE: str = "generated_data/json/queries.json"
+OUTPUT_FILE: Path = Path("generated_data") / "json" / "queries.json"
 
 QUERIES_DATA: dict = {
     "domain": "Machine Learning and Natural Language Processing",
@@ -70,9 +71,9 @@ QUERIES_DATA: dict = {
 }
 
 
-def generate_queries(output_file: str = OUTPUT_FILE) -> None:
+def generate_queries(output_file: str = str(OUTPUT_FILE)) -> None:
     """Создаёт файл queries.json"""
-    output_dir = os.path.dirname(output_file)
+    output_dir = Path(output_file).parent
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
 

@@ -1,9 +1,10 @@
 import json
 import random
+from pathlib import Path
 
-DATASET_FILE = "generated_data/json/ltr_dataset.json"
-TRAIN_FILE = "generated_data/json/ltr_train.json"
-TEST_FILE = "generated_data/json/ltr_test.json"
+DATASET_FILE = Path("generated_data") / "json" / "ltr_dataset.json"
+TRAIN_FILE = Path("generated_data") / "json" / "ltr_train.json"
+TEST_FILE = Path("generated_data") / "json" / "ltr_test.json"
 
 def split_dataset(train_queries=30, test_queries=10, seed=42):
     """

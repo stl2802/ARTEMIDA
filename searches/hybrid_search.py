@@ -1,17 +1,21 @@
 import sys
 import os
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
 import numpy as np
 
-from searches.lecsika_search import load_index, calculate_bm25, tokenize
+
+from searches.lecsika_search import load_index, calculate_bm25
+from utils.text_processor import preprocess_text
+
 from searches.hnsw_search import HnswSearcher
-#TODO:пути
-INDEX_FILE = "generated_data/json/inverted_index.json"
-CORPUS_FILE = "generated_data/json/preprocessed_corpus.json"
-QUERIES_FILE = "generated_data/json/queries.json"
+
+INDEX_FILE = Path("generated_data") / "json" / "inverted_index.json"
+CORPUS_FILE = Path("generated_data") / "json" / "preprocessed_corpus.json"
+QUERIES_FILE = Path("generated_data") / "json" / "queries.json"
 
 # Значение α по умолчанию (вес лексического поиска)
 DEFAULT_ALPHA = 0.5
@@ -51,7 +55,7 @@ class HybridSearcher:
 
     def get_candidates_with_scores(self, query: str, top_k_per_method: int = 20) -> list:
         """Получение кандидатов с оценками."""
-        query_tokens = tokenize(query)
+        query_tokens = preprocess_text(query)
         
         bm25_all = {}
         for doc_id in self.forward_index:
@@ -175,7 +179,7 @@ def search_mode():
     test_queries = []
     try:
         import os
-        os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
+        os.makedirs(QUERIES_FILE.parent, exist_ok=True)
         with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
             queries_data = json.load(f)
         test_queries = (

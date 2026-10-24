@@ -1,19 +1,19 @@
 import sys
 import os
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
 from searches.hybrid_search import HybridSearcher, calculate_hybrid_score, DEFAULT_ALPHA
 
-QUERIES_FILE = "generated_data/json/queries.json"
+QUERIES_FILE = Path("generated_data") / "json" / "queries.json"
 ALPHA_VALUES = [0.0, 0.25, 0.5, 0.75, 1.0]
 
 
 def run_benchmark():
     searcher = HybridSearcher()
-    import os
-    os.makedirs(os.path.dirname(QUERIES_FILE), exist_ok=True)
+    QUERIES_FILE.parent.mkdir(exist_ok=True)
     with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
         queries_data = json.load(f)
     

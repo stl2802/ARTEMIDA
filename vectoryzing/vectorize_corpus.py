@@ -1,9 +1,9 @@
 import json
 from collections import Counter
+from pathlib import Path
 
-#TODO: пути
-INPUT_FILE = "generated_data/json/preprocessed_corpus.json"
-OUTPUT_FILE = "generated_data/json/vocabulary.json"
+INPUT_FILE = Path("generated_data") / "json" / "preprocessed_corpus.json"
+OUTPUT_FILE = Path("generated_data") / "json" / "vocabulary.json"
 
 def build_vocabulary():
     with open(INPUT_FILE, 'r', encoding='utf-8') as f:
